@@ -22,3 +22,4 @@ class RentalOrder {
         public double getCost(){
           return cost;
         }
+}

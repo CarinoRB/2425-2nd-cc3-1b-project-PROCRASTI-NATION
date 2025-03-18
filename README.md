@@ -2,7 +2,7 @@
 
 <p id="description">Car rental app made for our CC3 class</p>
 
-<p align="center"><img src="https://img.shields.io/badge/java-swing-blue" alt="shields"></p>
+<p align="center"><img src="https://img.shields.io/badge/java-swing-red" alt="shields"></p>
 
 <h1 align="center" id="title2">UML DIAGRAM</h1>
 

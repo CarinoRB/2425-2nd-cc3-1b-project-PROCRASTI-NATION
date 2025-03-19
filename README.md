@@ -4,6 +4,7 @@
 # Project Details
 ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/CarinoRB/2425-2nd-cc3-1b-project-PROCRASTI-NATION)
 ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues-pr/CarinoRB/2425-2nd-cc3-1b-project-PROCRASTI-NATION)
+![GitHub Issues or Pull Requests](https://img.shields.io/github/issues-pr-closed/CarinoRB/2425-2nd-cc3-1b-project-PROCRASTI-NATION)
 
 <h1 align="center" id="title2">UML DIAGRAM</h1>
 

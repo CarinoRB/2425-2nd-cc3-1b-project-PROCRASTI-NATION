@@ -3,7 +3,7 @@
 <p id="description">Car rental app made for our CC3 class</p>
 <p><img src="https://img.shields.io/badge/java-swing-red" alt="shields"></p>
 <p><img src="https://img.shields.io/github/issues/CarinoRB/2425-2nd-cc3-1b-project-PROCRASTI-NATION" alt="shields"></p>
-<p><img src="https://img.shields.io/github/issues-pr/CarinoRB/2425-2nd-cc3-1b-project-PROCRASTI-NATION alt="shields"></p>
+<p><img src="https://img.shields.io/github/issues-pr/CarinoRB/2425-2nd-cc3-1b-project-PROCRASTI-NATION" alt="shields"></p>
 <h1 align="center" id="title2">UML DIAGRAM</h1>
 
 

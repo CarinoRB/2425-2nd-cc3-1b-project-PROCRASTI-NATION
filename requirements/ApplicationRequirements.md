@@ -9,4 +9,8 @@ Core Features:
 8. Maintenance 
 9. Enumeration-Based Workflows
 Side Features:
-
+- Dark Mode Toggle
+- Push Notifications
+- Referral Program
+- Chat Support
+- Saved Favorite Cars

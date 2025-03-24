@@ -5,8 +5,8 @@ Core Features:
 4. Payment & Insurance
 5. Location & Logistics
 6. Notifications
-7. Maintenance & Reviews
-8. Maintenance & Reviews
+7. Reviews
+8. Maintenance 
 9. Enumeration-Based Workflows
 Side Features:
 

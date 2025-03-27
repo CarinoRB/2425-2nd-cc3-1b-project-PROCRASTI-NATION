@@ -10,6 +10,6 @@ public class Review {
     //editReview logic
   }
   public int getReviewId(){
-    return reviewId;
+    return reviewID;
   }
 }

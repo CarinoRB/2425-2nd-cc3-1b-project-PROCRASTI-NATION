@@ -1,3 +1,5 @@
+import java.util.Date;
+
 public class MaintenanceRecord {
   private int recordId;
   private Date maintenanceDate;

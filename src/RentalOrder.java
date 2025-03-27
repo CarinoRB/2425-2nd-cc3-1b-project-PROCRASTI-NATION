@@ -1,3 +1,5 @@
+import java.util.Date;
+
 class RentalOrder {
         private int orderId;
         private Date startDate;

@@ -9,6 +9,6 @@ public class Insurance {
     //calculatePremium logic 
   }
   public int getinsuranceId(){
-    return insuranceId;
+    return insuranceID;
   }
 }

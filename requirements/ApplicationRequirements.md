@@ -14,15 +14,15 @@ GUI Pages
 - Notifications Page
 - Reviews & Ratings Page
 Core Features:
-1. User Management, role based access
-2. Car Inventory Management
-3. Reservation & Order Management
-4. Payment & Insurance
-5. Location & Logistics
-6. Notifications
-7. Reviews
-8. Maintenance 
-9. Enumeration-Based Workflows
+- User Management, role based access
+- Car Inventory Management
+- Reservation & Order Management
+- Payment & Insurance
+- Location & Logistics
+- Notifications
+- Reviews
+- Maintenance 
+- Enumeration-Based Workflows
 Side Features:
 - Dark Mode Toggle
 - Push Notifications

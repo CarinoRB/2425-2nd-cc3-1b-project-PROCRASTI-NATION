@@ -1,4 +1,4 @@
-GUI Pages
+# GUI Pages
 - Home Page
 - Login/Signup Page
 - Car Listings Page
@@ -13,7 +13,7 @@ GUI Pages
 - Terms & Conditions Page
 - Notifications Page
 - Reviews & Ratings Page
-Core Features:
+# Core Features
 - User Management, role based access
 - Car Inventory Management
 - Reservation & Order Management
@@ -23,7 +23,7 @@ Core Features:
 - Reviews
 - Maintenance 
 - Enumeration-Based Workflows
-Side Features:
+# Side Features
 - Dark Mode Toggle
 - Push Notifications
 - Referral Program

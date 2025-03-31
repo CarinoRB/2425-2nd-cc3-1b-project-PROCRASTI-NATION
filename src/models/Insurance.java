@@ -1,4 +1,4 @@
-public class Insurance {
+  public class Insurance {
   private int insuranceID;
   private String provider;
   private String policyNUmber;

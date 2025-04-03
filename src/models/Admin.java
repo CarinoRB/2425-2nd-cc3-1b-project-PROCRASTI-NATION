@@ -1,3 +1,6 @@
+// Remove the package declaration
+// package models;
+
 public class Admin extends User {
     public Admin(int userId, String name, String email, String phone) {
         super(userId, name, email, phone);

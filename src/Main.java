@@ -1,26 +1,17 @@
-import java.io.*;
 import javax.swing.*;
+import viewmodels.Home;
 
-public class Main{
-    public static void main(String[]args){
-        JFrame frame = new JFrame();
-
-        // Creating instance of JButton
-        JButton button = new JButton("Team Procrasti-Nation");
-
-        // x axis, y axis, width, height
-        button.setBounds(150, 200, 220, 50);
-
-        // adding button in JFrame
-        frame.add(button);
-
-        // 400 width and 500 height
-        frame.setSize(500, 600);
-
-        // using no layout managers
-        frame.setLayout(null);
-
-        // making the frame visible
-        frame.setVisible(true);
+public class Main {
+    public static void main(String[] args) {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        SwingUtilities.invokeLater(() -> {
+            Home homeUI = new Home();
+            homeUI.setVisible(true);
+        });
     }
 }

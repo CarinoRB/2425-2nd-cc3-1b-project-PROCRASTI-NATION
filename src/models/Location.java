@@ -3,7 +3,7 @@ public class Location{
     private String dropoffAddress;
     private double distance;
     public double calculateDistance(){
-        return distance //IMPLEMENT DISTANCE CALCULATION..
+        return distance; //IMPLEMENT DISTANCE CALCULATION..
     }
     public void updateAddress(){
         //UPDATE ADDRESS LOGIC

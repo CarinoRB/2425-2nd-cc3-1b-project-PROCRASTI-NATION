@@ -1,4 +1,6 @@
-    public class Notification{
+import java.util.Date;
+
+public class Notification{
     private int notificationId;
     private String message;
     private Date sentDate;

@@ -1,4 +1,4 @@
-public class Notification{
+    public class Notification{
     private int notificationId;
     private String message;
     private Date sentDate;

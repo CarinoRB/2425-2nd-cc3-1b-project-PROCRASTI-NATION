@@ -25,20 +25,30 @@ public class Home extends JPanel {
         setLayout(new BorderLayout(0, 0));
         setBackground(BACKGROUND_COLOR);
 
-        // Header Panel - Modernized with the new style
-        JPanel headerPanel = createHeaderPanel();
+        // Create the main content
+        JPanel contentPanel = new JPanel();
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        contentPanel.setBackground(BACKGROUND_COLOR);
         
-        // Main Content Panel - Updated with consistent styling
-        JPanel mainContentPanel = createMainContentPanel();
+        // Welcome Section with modern styling
+        JPanel welcomeSection = createWelcomeSection();
+        contentPanel.add(welcomeSection);
         
-        // Footer Panel - Refined to match the overall aesthetic
-        // JPanel footerPanel = createFooterPanel();
+        contentPanel.add(Box.createRigidArea(new Dimension(0, 40)));
 
-        // Add all panels to the main frame
-        //tanggalin muna ung header kasi mej pangit 😭
-        // add(headerPanel, BorderLayout.NORTH);
-        add(mainContentPanel, BorderLayout.CENTER);
-        // add(footerPanel, BorderLayout.SOUTH);
+        // Featured Cars Panel with consistent design language
+        JPanel featuredCarsPanel = createFeaturedCarsPanel();
+        contentPanel.add(featuredCarsPanel);
+        
+        // Create a scroll pane to make the content scrollable
+        JScrollPane scrollPane = new JScrollPane(contentPanel);
+        scrollPane.setBorder(null);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        
+        // Add the scroll pane to the main panel
+        add(scrollPane, BorderLayout.CENTER);
     }
     
     private JPanel createHeaderPanel() {
@@ -66,25 +76,6 @@ public class Home extends JPanel {
         
         
         return headerPanel;
-    }
-    
-    private JPanel createMainContentPanel() {
-        JPanel mainContentPanel = new JPanel();
-        mainContentPanel.setLayout(new BoxLayout(mainContentPanel, BoxLayout.Y_AXIS));
-        mainContentPanel.setBackground(BACKGROUND_COLOR);
-        mainContentPanel.setBorder(new EmptyBorder(40, 60, 40, 60));
-
-        // Welcome Section with modern styling
-        JPanel welcomeSection = createWelcomeSection();
-        mainContentPanel.add(welcomeSection);
-        
-        mainContentPanel.add(Box.createRigidArea(new Dimension(0, 40)));
-
-        // Featured Cars Panel with consistent design language
-        JPanel featuredCarsPanel = createFeaturedCarsPanel();
-        mainContentPanel.add(featuredCarsPanel);
-        
-        return mainContentPanel;
     }
     
     private JPanel createWelcomeSection() {
@@ -136,17 +127,26 @@ public class Home extends JPanel {
         featuredContainer.add(featuredTitlePanel);
         featuredContainer.add(Box.createRigidArea(new Dimension(0, 20)));
         
-        // Featured Cars Grid
-        JPanel featuredPanel = new JPanel(new GridLayout(1, 3, 30, 0));
+        // Featured Cars Grid - changed to 4 rows of 3 columns
+        JPanel featuredPanel = new JPanel(new GridLayout(4, 3, 30, 30));
         featuredPanel.setBackground(BACKGROUND_COLOR);
         featuredPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        featuredPanel.setMaximumSize(new Dimension(1080, 400));
+        featuredPanel.setMaximumSize(new Dimension(1080, 1600));
 
-        // Sample car data
+        // Sample car data with 12 cars
         String[][] carData = {
             {"Toyota Supra", "50", "2 Seater", "With Aircon", "Automatic", "4.8", "15"},
             {"Honda Civic Type R", "45", "4 Seater", "With Aircon", "Manual", "4.6", "23"},
-            {"Nissan GT-R", "60", "2 Seater", "With Aircon", "Automatic", "4.9", "19"}
+            {"Nissan GT-R", "60", "2 Seater", "With Aircon", "Automatic", "4.9", "19"},
+            {"Ford Mustang", "55", "4 Seater", "With Aircon", "Automatic", "4.7", "18"},
+            {"BMW M3", "65", "4 Seater", "With Aircon", "Automatic", "4.8", "20"},
+            {"Mercedes-AMG C63", "70", "4 Seater", "With Aircon", "Automatic", "4.7", "16"},
+            {"Audi R8", "80", "2 Seater", "With Aircon", "Automatic", "4.9", "12"},
+            {"Porsche 911", "85", "2+2 Seater", "With Aircon", "Automatic", "5.0", "25"},
+            {"Chevrolet Camaro", "52", "4 Seater", "With Aircon", "Manual", "4.5", "17"},
+            {"Subaru WRX STI", "48", "5 Seater", "With Aircon", "Manual", "4.6", "22"},
+            {"Lamborghini Huracan", "120", "2 Seater", "With Aircon", "Automatic", "5.0", "10"},
+            {"Ferrari 488 GTB", "130", "2 Seater", "With Aircon", "Automatic", "5.0", "8"}
         };
 
         for (String[] carInfo : carData) {
@@ -154,6 +154,9 @@ public class Home extends JPanel {
         }
         
         featuredContainer.add(featuredPanel);
+        
+        // Add some padding at the bottom
+        featuredContainer.add(Box.createRigidArea(new Dimension(0, 40)));
         
         return featuredContainer;
     }
@@ -329,6 +332,8 @@ public class Home extends JPanel {
             this.shadowOpacity = shadowOpacity;
         }
 
+
+        //PANG DESIGN LANG TO DO NOT BOTHER !!! DI KO RIN MAINTINDIHAN
         @Override
         public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
             Graphics2D g2 = (Graphics2D) g.create();

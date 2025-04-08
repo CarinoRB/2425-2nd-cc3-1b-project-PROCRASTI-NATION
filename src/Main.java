@@ -1,5 +1,4 @@
 import javax.swing.*;
-import viewmodels.Home;
 
 public class Main {
     public static void main(String[] args) {
@@ -10,8 +9,8 @@ public class Main {
         }
         
         SwingUtilities.invokeLater(() -> {
-            Home homeUI = new Home();
-            homeUI.setVisible(true);
+            MainUI mainUI = new MainUI();
+            mainUI.setVisible(true);
         });
     }
 }

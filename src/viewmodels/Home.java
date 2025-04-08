@@ -300,11 +300,10 @@ public class Home extends JPanel {
         ratingPanel.add(ratingStars);
         ratingPanel.add(ratingText);
         
-        // Rent button styled like the login button
-        JButton rentButton = createStyledButton("Rent Now", SECONDARY_COLOR, Color.WHITE);
+        JButton rentButton = createStyledButton("Rent Now", PRIMARY_COLOR, Color.WHITE);
         rentButton.setFont(new Font("Arial", Font.BOLD, 13));
         rentButton.addActionListener(e -> 
-            JOptionPane.showMessageDialog(null, "Booking system to be implemented")
+            JOptionPane.showMessageDialog(null, "idk")
         );
         
         bottomPanel.add(ratingPanel, BorderLayout.WEST);
@@ -318,7 +317,7 @@ public class Home extends JPanel {
         return card;
     }
 
-    // Modern shadow border class for a subtle elevation effect
+    //PANG SHADOW EFFECTS DI KO RIN TO MAINTINDIHAN!!!
     private class ModernShadowBorder extends AbstractBorder {
         private Color shadowColor;
         private int shadowSize;
@@ -385,6 +384,8 @@ public class Home extends JPanel {
         }
     }
 
+
+    //OWN CLASS FOR TESTING PURPOSES
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

@@ -303,7 +303,7 @@ public class Home extends JPanel {
         JButton rentButton = createStyledButton("Rent Now", PRIMARY_COLOR, Color.WHITE);
         rentButton.setFont(new Font("Arial", Font.BOLD, 13));
         rentButton.addActionListener(e -> 
-            JOptionPane.showMessageDialog(null, "idk")
+            showRentalModal(carInfo[0], carInfo[1], carInfo[2], carInfo[3], carInfo[4])
         );
         
         bottomPanel.add(ratingPanel, BorderLayout.WEST);
@@ -315,6 +315,304 @@ public class Home extends JPanel {
         card.add(contentPanel);
         
         return card;
+    }
+
+    private void showRentalModal(String carName, String price, String seats, String aircon, String transmission) {
+        // Create custom dialog
+        JDialog dialog = new JDialog((Frame)SwingUtilities.getWindowAncestor(this), "Rent a Car", true);
+        dialog.setSize(700, 550);
+        dialog.setLocationRelativeTo(null);
+        dialog.setResizable(false);
+        
+        // Main content panel
+        JPanel contentPanel = new JPanel();
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        contentPanel.setBackground(BACKGROUND_COLOR);
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(25, 30, 25, 30));
+        
+        // Car image and name header
+        JPanel headerPanel = new JPanel();
+        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
+        headerPanel.setBackground(BACKGROUND_COLOR);
+        headerPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        JLabel carEmoji = new JLabel("🚗");
+        carEmoji.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 48));
+        carEmoji.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        JLabel nameLabel = new JLabel(carName);
+        nameLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        nameLabel.setForeground(TEXT_COLOR);
+        nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        headerPanel.add(carEmoji);
+        headerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        headerPanel.add(nameLabel);
+        
+        // Separator
+        JSeparator separator = new JSeparator();
+        separator.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
+        separator.setForeground(LIGHT_BORDER_COLOR);
+        
+        // Car details section
+        JPanel detailsPanel = new JPanel(new GridLayout(0, 2, 10, 15));
+        detailsPanel.setBackground(BACKGROUND_COLOR);
+        detailsPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+        detailsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        // Car specifications
+        addDetailRow(detailsPanel, "Vehicle Type:", getVehicleType(seats, transmission));
+        addDetailRow(detailsPanel, "Seating Capacity:", seats);
+        addDetailRow(detailsPanel, "Transmission:", transmission);
+        addDetailRow(detailsPanel, "Air Conditioning:", aircon);
+        addDetailRow(detailsPanel, "Rate per Day:", "$" + price);
+        
+        // Location and dates info
+        addDetailRow(detailsPanel, "Availability:", "Available Now");
+        addDetailRow(detailsPanel, "Pickup Location:", "Manila Main Branch");
+        
+        // Create rental duration input
+        JPanel durationPanel = new JPanel(new BorderLayout(10, 0));
+        durationPanel.setOpaque(false);
+        
+        JLabel durationLabel = new JLabel("Rental Duration (days):");
+        durationLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        durationLabel.setForeground(TEXT_SECONDARY_COLOR);
+        
+        // Create spinner model with min 1, max 30, default 3 days
+        SpinnerNumberModel spinnerModel = new SpinnerNumberModel(3, 1, 30, 1);
+        JSpinner durationSpinner = new JSpinner(spinnerModel);
+        durationSpinner.setPreferredSize(new Dimension(80, 25));
+        JComponent editor = durationSpinner.getEditor();
+        if (editor instanceof JSpinner.DefaultEditor) {
+            JSpinner.DefaultEditor spinnerEditor = (JSpinner.DefaultEditor) editor;
+            spinnerEditor.getTextField().setHorizontalAlignment(JTextField.CENTER);
+        }
+        
+        JPanel spinnerWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        spinnerWrapper.setOpaque(false);
+        spinnerWrapper.add(durationSpinner);
+        
+        durationPanel.add(durationLabel, BorderLayout.WEST);
+        durationPanel.add(spinnerWrapper, BorderLayout.EAST);
+        
+        // Calculate initial dates based on default duration
+        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("MMM dd, yyyy");
+        
+        calendar.add(java.util.Calendar.DATE, 3);
+        String pickupDate = dateFormat.format(calendar.getTime());
+        
+        calendar.add(java.util.Calendar.DATE, (Integer)spinnerModel.getValue());
+        String returnDate = dateFormat.format(calendar.getTime());
+        
+        // Create labels that will be updated
+        JLabel pickupDateLabel = new JLabel(pickupDate + ", 10:00 AM");
+        pickupDateLabel.setFont(REGULAR_FONT);
+        pickupDateLabel.setForeground(TEXT_COLOR);
+        
+        JLabel returnDateLabel = new JLabel(returnDate + ", 10:00 AM");
+        returnDateLabel.setFont(REGULAR_FONT);
+        returnDateLabel.setForeground(TEXT_COLOR);
+        
+        // Add date rows
+        JPanel pickupDatePanel = new JPanel(new BorderLayout());
+        pickupDatePanel.setOpaque(false);
+        JLabel pickupTextLabel = new JLabel("Earliest Pickup:");
+        pickupTextLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        pickupTextLabel.setForeground(TEXT_SECONDARY_COLOR);
+        pickupDatePanel.add(pickupTextLabel, BorderLayout.WEST);
+        pickupDatePanel.add(pickupDateLabel, BorderLayout.EAST);
+        
+        JPanel returnDatePanel = new JPanel(new BorderLayout());
+        returnDatePanel.setOpaque(false);
+        JLabel returnTextLabel = new JLabel("Return Date:");
+        returnTextLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        returnTextLabel.setForeground(TEXT_SECONDARY_COLOR);
+        returnDatePanel.add(returnTextLabel, BorderLayout.WEST);
+        returnDatePanel.add(returnDateLabel, BorderLayout.EAST);
+        
+        // Calculate initial price (3 days rental by default)
+        int pricePerDay = Integer.parseInt(price);
+        final int[] days = {(Integer)spinnerModel.getValue()};
+        final int[] totalPrice = {pricePerDay * days[0]};
+        final int[] insurancePrice = {25};
+        final int[] taxesPrice = {(int)(totalPrice[0] * 0.12)};
+        final int[] finalTotal = {totalPrice[0] + insurancePrice[0] + taxesPrice[0]};
+        
+        // References to pricing labels that need updating
+        final JLabel[] rentalFeeValueLabel = {new JLabel("$" + totalPrice[0])};
+        final JLabel[] taxesValueLabel = {new JLabel("$" + taxesPrice[0])};
+        final JLabel[] totalValueLabel = {new JLabel("$" + finalTotal[0])};
+        
+        // Pricing summary panel
+        JPanel pricingPanel = new JPanel();
+        pricingPanel.setLayout(new BoxLayout(pricingPanel, BoxLayout.Y_AXIS));
+        pricingPanel.setBackground(new Color(245, 247, 250));
+        pricingPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(LIGHT_BORDER_COLOR, 1),
+            BorderFactory.createEmptyBorder(15, 20, 15, 20)
+        ));
+        pricingPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        JLabel summaryLabel = new JLabel("Pricing Summary");
+        summaryLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        summaryLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        JPanel rentalFeePanel = new JPanel(new BorderLayout());
+        rentalFeePanel.setOpaque(false);
+        rentalFeePanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 5, 0));
+        final JLabel[] rentalFeeDaysLabel = {new JLabel("Rental Fee (" + days[0] + " days):")};
+        rentalFeePanel.add(rentalFeeDaysLabel[0], BorderLayout.WEST);
+        rentalFeePanel.add(rentalFeeValueLabel[0], BorderLayout.EAST);
+        
+        JPanel insurancePanel = new JPanel(new BorderLayout());
+        insurancePanel.setOpaque(false);
+        insurancePanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+        insurancePanel.add(new JLabel("Insurance:"), BorderLayout.WEST);
+        insurancePanel.add(new JLabel("$" + insurancePrice[0]), BorderLayout.EAST);
+        
+        JPanel taxPanel = new JPanel(new BorderLayout());
+        taxPanel.setOpaque(false);
+        taxPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+        taxPanel.add(new JLabel("Taxes & Fees:"), BorderLayout.WEST);
+        taxPanel.add(taxesValueLabel[0], BorderLayout.EAST);
+        
+        JSeparator priceSeparator = new JSeparator();
+        priceSeparator.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
+        priceSeparator.setForeground(LIGHT_BORDER_COLOR);
+        
+        JPanel totalPanel = new JPanel(new BorderLayout());
+        totalPanel.setOpaque(false);
+        totalPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 5, 0));
+        
+        JLabel totalLabel = new JLabel("Total:");
+        totalLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        
+        totalValueLabel[0].setFont(new Font("Arial", Font.BOLD, 16));
+        totalValueLabel[0].setForeground(PRIMARY_COLOR);
+        
+        totalPanel.add(totalLabel, BorderLayout.WEST);
+        totalPanel.add(totalValueLabel[0], BorderLayout.EAST);
+        
+        pricingPanel.add(summaryLabel);
+        pricingPanel.add(rentalFeePanel);
+        pricingPanel.add(insurancePanel);
+        pricingPanel.add(taxPanel);
+        pricingPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        pricingPanel.add(priceSeparator);
+        pricingPanel.add(totalPanel);
+        
+        // Add listener to update prices when duration changes
+        durationSpinner.addChangeListener(e -> {
+            // Update days value
+            days[0] = (Integer)durationSpinner.getValue();
+            
+            // Update return date
+            java.util.Calendar cal = java.util.Calendar.getInstance();
+            cal.add(java.util.Calendar.DATE, 3); // pickup date is fixed 3 days from now
+            
+            // Set return date based on duration
+            cal.add(java.util.Calendar.DATE, days[0]);
+            String newReturnDate = dateFormat.format(cal.getTime());
+            returnDateLabel.setText(newReturnDate + ", 10:00 AM");
+            
+            // Recalculate prices
+            totalPrice[0] = pricePerDay * days[0];
+            taxesPrice[0] = (int)(totalPrice[0] * 0.12);
+            finalTotal[0] = totalPrice[0] + insurancePrice[0] + taxesPrice[0];
+            
+            // Update price labels
+            rentalFeeDaysLabel[0].setText("Rental Fee (" + days[0] + " days):");
+            rentalFeeValueLabel[0].setText("$" + totalPrice[0]);
+            taxesValueLabel[0].setText("$" + taxesPrice[0]);
+            totalValueLabel[0].setText("$" + finalTotal[0]);
+        });
+        
+        // Add elements to the details panel
+        detailsPanel.add(durationPanel);
+        detailsPanel.add(new JLabel("")); // Empty cell for grid alignment
+        detailsPanel.add(pickupTextLabel);
+        detailsPanel.add(pickupDateLabel);
+        detailsPanel.add(returnTextLabel);
+        detailsPanel.add(returnDateLabel);
+        
+        // Action buttons
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        buttonPanel.setOpaque(false);
+        buttonPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.setFont(REGULAR_FONT);
+        cancelButton.setForeground(TEXT_SECONDARY_COLOR);
+        cancelButton.setBorderPainted(false);
+        cancelButton.setFocusPainted(false);
+        cancelButton.setContentAreaFilled(false);
+        cancelButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        cancelButton.addActionListener(e -> dialog.dispose());
+        
+        JButton confirmButton = createStyledButton("Confirm Booking", SECONDARY_COLOR, Color.WHITE);
+        confirmButton.setFont(new Font("Arial", Font.BOLD, 14));
+        confirmButton.setBorder(BorderFactory.createEmptyBorder(8, 20, 8, 20));
+        confirmButton.addActionListener(e -> {
+            JOptionPane.showMessageDialog(dialog, 
+                "Your booking for " + carName + " has been confirmed!\n" +
+                "Pickup: " + pickupDateLabel.getText() + "\n" +
+                "Return: " + returnDateLabel.getText() + "\n" +
+                "Total: " + totalValueLabel[0].getText(),
+                "Booking Confirmed", 
+                JOptionPane.INFORMATION_MESSAGE);
+            dialog.dispose();
+        });
+        
+        buttonPanel.add(cancelButton);
+        buttonPanel.add(confirmButton);
+        
+        // Add all components to content panel
+        contentPanel.add(headerPanel);
+        contentPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        contentPanel.add(separator);
+        contentPanel.add(detailsPanel);
+        contentPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+        contentPanel.add(pricingPanel);
+        contentPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        contentPanel.add(buttonPanel);
+        
+        // Wrap the content panel in a scroll pane
+        JScrollPane scrollPane = new JScrollPane(contentPanel);
+        scrollPane.setBorder(null);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        
+        // Add the scroll pane to the dialog
+        dialog.add(scrollPane);
+        dialog.setVisible(true);
+    }
+    
+    private void addDetailRow(JPanel panel, String label, String value) {
+        JLabel labelComponent = new JLabel(label);
+        labelComponent.setFont(new Font("Arial", Font.BOLD, 14));
+        labelComponent.setForeground(TEXT_SECONDARY_COLOR);
+        
+        JLabel valueComponent = new JLabel(value);
+        valueComponent.setFont(REGULAR_FONT);
+        valueComponent.setForeground(TEXT_COLOR);
+        
+        panel.add(labelComponent);
+        panel.add(valueComponent);
+    }
+    
+    private String getVehicleType(String seats, String transmission) {
+        if (seats.contains("2")) {
+            return "Sports Car";
+        } else if (seats.contains("7")) {
+            return "SUV";
+        } else if (transmission.contains("Manual")) {
+            return "Sedan (Manual)";
+        } else {
+            return "Sedan";
+        }
     }
 
     //PANG SHADOW EFFECTS DI KO RIN TO MAINTINDIHAN!!!

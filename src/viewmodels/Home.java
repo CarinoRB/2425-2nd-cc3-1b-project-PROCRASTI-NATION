@@ -3,6 +3,8 @@ import javax.swing.border.*;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 
+// No need to explicitly import BookingsPage when it's in the same package
+
 public class Home extends JPanel {
     // Colors and styling - matching the AuthForm
     private final Color BACKGROUND_COLOR = Color.WHITE;
@@ -17,8 +19,21 @@ public class Home extends JPanel {
     private final Font REGULAR_FONT = new Font("Arial", Font.PLAIN, 14);
     private final Font SMALL_FONT = new Font("Arial", Font.PLAIN, 12);
     
+    private BookingsPage bookingsPage; // Reference to BookingsPage
+    private NotificationsPage notificationsPage; // Reference to NotificationsPage
+    
     public Home() {
         initializeUI();
+    }
+
+    // Add a method to set the BookingsPage reference
+    public void setBookingsPage(BookingsPage bookingsPage) {
+        this.bookingsPage = bookingsPage;
+    }
+    
+    // Add a method to set the NotificationsPage reference
+    public void setNotificationsPage(NotificationsPage notificationsPage) {
+        this.notificationsPage = notificationsPage;
     }
 
     private void initializeUI() {
@@ -551,10 +566,14 @@ public class Home extends JPanel {
         cancelButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         cancelButton.addActionListener(e -> dialog.dispose());
         
+        // Generate a random license plate for the car
+        String licensePlate = generateRandomLicensePlate();
+        
         JButton confirmButton = createStyledButton("Confirm Booking", SECONDARY_COLOR, Color.WHITE);
         confirmButton.setFont(new Font("Arial", Font.BOLD, 14));
         confirmButton.setBorder(BorderFactory.createEmptyBorder(8, 20, 8, 20));
         confirmButton.addActionListener(e -> {
+            // Show confirmation message
             JOptionPane.showMessageDialog(dialog, 
                 "Your booking for " + carName + " has been confirmed!\n" +
                 "Pickup: " + pickupDateLabel.getText() + "\n" +
@@ -562,6 +581,36 @@ public class Home extends JPanel {
                 "Total: " + totalValueLabel[0].getText(),
                 "Booking Confirmed", 
                 JOptionPane.INFORMATION_MESSAGE);
+            
+            // Add booking to BookingsPage if available
+            if (bookingsPage != null) {
+                String vehicleType = getVehicleType(seats, transmission);
+                String priceWithoutDollar = totalValueLabel[0].getText().replace("$", "");
+                
+                bookingsPage.addNewBooking(
+                    carName, 
+                    vehicleType, 
+                    transmission,
+                    seats,
+                    licensePlate,
+                    pickupDateLabel.getText(), 
+                    returnDateLabel.getText(),
+                    "Manila Main Branch",
+                    priceWithoutDollar
+                );
+            }
+            
+            // Add notification to NotificationsPage if available
+            if (notificationsPage != null) {
+                notificationsPage.addBookingNotification(
+                    carName,
+                    licensePlate,
+                    pickupDateLabel.getText(),
+                    returnDateLabel.getText(),
+                    totalValueLabel[0].getText()
+                );
+            }
+            
             dialog.dispose();
         });
         
@@ -613,6 +662,30 @@ public class Home extends JPanel {
         } else {
             return "Sedan";
         }
+    }
+
+    // Generate a random license plate for cars
+    private String generateRandomLicensePlate() {
+        String[] letters = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", 
+                           "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+        
+        StringBuilder plate = new StringBuilder();
+        
+        // Generate 3 random letters
+        for (int i = 0; i < 3; i++) {
+            int index = (int) (Math.random() * letters.length);
+            plate.append(letters[index]);
+        }
+        
+        plate.append("-");
+        
+        // Generate 3 random digits
+        for (int i = 0; i < 3; i++) {
+            int digit = (int) (Math.random() * 10);
+            plate.append(digit);
+        }
+        
+        return plate.toString();
     }
 
     //PANG SHADOW EFFECTS DI KO RIN TO MAINTINDIHAN!!!

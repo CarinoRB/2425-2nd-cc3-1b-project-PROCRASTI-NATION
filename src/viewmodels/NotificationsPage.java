@@ -13,6 +13,12 @@ public class NotificationsPage extends JPanel {
     private final Color READ_COLOR = Color.WHITE;
     private final Color ACCENT_COLOR = new Color(66, 133, 244);
     
+    // For storing notifications content
+    private JPanel notificationsContentPanel;
+    
+    // Reference to MainUI for triggering side nav flash
+    private MainUI mainUI;
+    
     public NotificationsPage() {
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
@@ -71,8 +77,14 @@ public class NotificationsPage extends JPanel {
             mainContent.add(separator);
             mainContent.add(Box.createVerticalStrut(15));
             
+            // Create a panel to hold notification items
+            notificationsContentPanel = new JPanel();
+            notificationsContentPanel.setLayout(new BoxLayout(notificationsContentPanel, BoxLayout.Y_AXIS));
+            notificationsContentPanel.setBackground(Color.WHITE);
+            notificationsContentPanel.setAlignmentX(LEFT_ALIGNMENT);
+            
             // Add sample notifications
-            mainContent.add(createNotificationItem(
+            notificationsContentPanel.add(createNotificationItem(
                 "Booking Confirmed", 
                 "Your booking for Toyota Vios (ABC-123) has been confirmed for March 12, 2025.",
                 "10 minutes ago",
@@ -80,7 +92,7 @@ public class NotificationsPage extends JPanel {
                 true
             ));
             
-            mainContent.add(createNotificationItem(
+            notificationsContentPanel.add(createNotificationItem(
                 "Payment Successful", 
                 "Your payment of ₱2,500 for booking #12345 has been processed successfully.",
                 "2 hours ago",
@@ -88,7 +100,7 @@ public class NotificationsPage extends JPanel {
                 true
             ));
             
-            mainContent.add(createNotificationItem(
+            notificationsContentPanel.add(createNotificationItem(
                 "Weekend Special Promo", 
                 "Get 15% off on all SUV rentals this weekend. Use code WEEKEND15 at checkout.",
                 "Yesterday",
@@ -96,7 +108,7 @@ public class NotificationsPage extends JPanel {
                 false
             ));
             
-            mainContent.add(createNotificationItem(
+            notificationsContentPanel.add(createNotificationItem(
                 "Booking Reminder", 
                 "Your booking for Honda City (XYZ-789) is scheduled for tomorrow at 9:00 AM.",
                 "2 days ago",
@@ -104,13 +116,15 @@ public class NotificationsPage extends JPanel {
                 false
             ));
             
-            mainContent.add(createNotificationItem(
+            notificationsContentPanel.add(createNotificationItem(
                 "Rate Your Experience", 
                 "How was your recent ride with our Toyota Fortuner? Please take a moment to rate your experience.",
                 "1 week ago",
                 "rating",
                 false
             ));
+            
+            mainContent.add(notificationsContentPanel);
         } else {
             // Empty state
             JPanel emptyStatePanel = createEmptyStatePanel();
@@ -320,5 +334,62 @@ public class NotificationsPage extends JPanel {
     // This would be replaced with actual logic to check if the user has notifications
     private boolean hasNotifications() {
         return true; // For demo, always show notifications
+    }
+    
+    /**
+     * Set the MainUI reference to enable flashing the navigation
+     */
+    public void setMainUI(MainUI mainUI) {
+        this.mainUI = mainUI;
+    }
+    
+    /**
+     * Adds a new booking notification to the notifications list
+     * @param carName The name of the car booked
+     * @param licensePlate The car's license plate
+     * @param pickupDate The pickup date
+     * @param returnDate The return date
+     * @param price Total price with currency symbol
+     * @return true if notification was added successfully
+     */
+    public boolean addBookingNotification(String carName, String licensePlate, 
+                                     String pickupDate, String returnDate, String price) {
+        if (notificationsContentPanel == null) {
+            return false;
+        }
+        
+        // Format dates to make the message more concise
+        String pickupDateShort = pickupDate.replace(", 10:00 AM", "");
+        String returnDateShort = returnDate.replace(", 10:00 AM", "");
+        
+        // Create message
+        String message = "Your booking for " + carName + " (" + licensePlate + ") has been confirmed " +
+                         "from " + pickupDateShort + " to " + returnDateShort + ". Total: " + price + ".";
+        
+        // Create new notification and add it at the top
+        JPanel newNotification = createNotificationItem(
+            "Booking Confirmed", 
+            message,
+            "Just now",
+            "booking",
+            true
+        );
+        
+        // Add the new notification at the top
+        if (notificationsContentPanel.getComponentCount() > 0) {
+            notificationsContentPanel.add(newNotification, 0);
+        } else {
+            notificationsContentPanel.add(newNotification);
+        }
+        
+        notificationsContentPanel.revalidate();
+        notificationsContentPanel.repaint();
+        
+        // Flash the notification menu icon if MainUI is available
+        if (mainUI != null) {
+            mainUI.flashNotificationIcon();
+        }
+        
+        return true;
     }
 } 

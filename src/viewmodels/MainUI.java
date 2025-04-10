@@ -12,6 +12,9 @@ public class MainUI extends JFrame {
     private ProfilePage profilePage;
     private SettingsPage settingsPage;
     private SideNavigation sideNav;
+    
+    // Track current page
+    private String currentPage = "home";
 
     public MainUI() {
         initializeUI();
@@ -52,6 +55,13 @@ public class MainUI extends JFrame {
         bookingsPage = new BookingsPage();
         profilePage = new ProfilePage();
         settingsPage = new SettingsPage();
+        
+        // Set MainUI reference in NotificationsPage
+        notificationsPage.setMainUI(this);
+        
+        // Connect Home, BookingsPage and NotificationsPage
+        homeUI.setBookingsPage(bookingsPage);
+        homeUI.setNotificationsPage(notificationsPage);
 
         // Add pages to content panel
         contentPanel.add(homeUI, "home");
@@ -77,6 +87,25 @@ public class MainUI extends JFrame {
     public void showPage(String pageName) {
         CardLayout cl = (CardLayout) contentPanel.getLayout();
         cl.show(contentPanel, pageName);
+        // Update current page
+        currentPage = pageName;
+    }
+
+    /**
+     * Gets the name of the currently displayed page
+     * @return the current page name
+     */
+    public String getCurrentPage() {
+        return currentPage;
+    }
+
+    /**
+     * Flashes the notification icon in the side navigation
+     */
+    public void flashNotificationIcon() {
+        if (sideNav != null) {
+            sideNav.flashNotificationMenuItem();
+        }
     }
 
     //pang test 

@@ -12,6 +12,10 @@ public class BookingsPage extends JPanel {
     private final Color COMPLETED_COLOR = new Color(158, 158, 158);
     private final Color CANCELLED_COLOR = new Color(234, 67, 53);
     
+    // For storing bookings data
+    private JPanel activeContentPanel;
+    private JTabbedPane tabbedPane;
+    
     public BookingsPage() {
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
@@ -36,7 +40,7 @@ public class BookingsPage extends JPanel {
         add(headerPanel, BorderLayout.NORTH);
         
         // Tab panel for different booking states
-        JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane = new JTabbedPane();
         tabbedPane.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         tabbedPane.setBorder(BorderFactory.createEmptyBorder());
         
@@ -119,7 +123,10 @@ public class BookingsPage extends JPanel {
         contentPanel.setBackground(Color.WHITE);
         contentPanel.setBorder(BorderFactory.createEmptyBorder(0, 30, 20, 30));
         
+        // Store reference to active content panel for adding new bookings
         if (isActive) {
+            activeContentPanel = contentPanel;
+            
             // Add active bookings
             contentPanel.add(createBookingCard(
                 "Toyota Vios 2025",
@@ -465,5 +472,73 @@ public class BookingsPage extends JPanel {
         g2d.dispose();
         
         return new ImageIcon(image);
+    }
+    
+    /**
+     * Adds a new booking to the active bookings tab
+     * @param carName The name of the car
+     * @param carType The type of vehicle (e.g., "Sedan", "SUV")
+     * @param transmission Transmission type (e.g., "Automatic", "Manual")
+     * @param seats Number of seats (e.g., "5 Seats")
+     * @param licensePlate License plate number
+     * @param pickupDate Pickup date (formatted)
+     * @param returnDate Return date (formatted)
+     * @param pickupLocation Pickup location
+     * @param price Total price
+     * @return true if booking was added successfully
+     */
+    public boolean addNewBooking(String carName, String carType, String transmission, 
+                               String seats, String licensePlate, String pickupDate, 
+                               String returnDate, String pickupLocation, String price) {
+        if (activeContentPanel == null) {
+            return false;
+        }
+        
+        // Format car details
+        String carDetails = carType + " • " + transmission + " • " + seats;
+        
+        // Format date range
+        String dateRange = formatDateRange(pickupDate, returnDate);
+        
+        // Format pickup location
+        String pickup = "Pickup: " + pickupLocation;
+        
+        // Format price - if price doesn't start with ₱, add it
+        if (!price.startsWith("₱")) {
+            price = "₱" + price;
+        }
+        
+        // If first booking, don't add spacing
+        if (activeContentPanel.getComponentCount() > 0) {
+            activeContentPanel.add(Box.createVerticalStrut(20));
+        }
+        
+        // Create and add the booking card
+        JPanel bookingCard = createBookingCard(
+            carName,
+            carDetails,
+            licensePlate,
+            dateRange,
+            pickup,
+            price,
+            "confirmed"
+        );
+        
+        activeContentPanel.add(bookingCard);
+        activeContentPanel.revalidate();
+        activeContentPanel.repaint();
+        
+        // Switch to the bookings tab
+        tabbedPane.setSelectedIndex(0); // Select the active tab
+        
+        return true;
+    }
+    
+    private String formatDateRange(String pickupDate, String returnDate) {
+        // Extract just the date parts
+        String pickupPart = pickupDate.replace(", 10:00 AM", "");
+        String returnPart = returnDate.replace(", 10:00 AM", "");
+        
+        return pickupPart + " - " + returnPart;
     }
 } 
